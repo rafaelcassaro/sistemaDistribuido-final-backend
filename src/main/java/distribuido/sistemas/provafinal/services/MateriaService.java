@@ -41,20 +41,18 @@ public class MateriaService {
 	public void delete(Long materiaId) {
 
 		try {
-			Estudante estudante = new Estudante();
-			Materia materia = repository.findById(materiaId).orElseThrow(() -> new EntityNotFoundException("asdfa"));
+			Materia materia = repository.findById(materiaId).orElseThrow(() -> new EntityNotFoundException("erro materia"));
 
-			for (Long i = (long) 1; i < 4; i++) {
-				estudante = estRep.findById(i).orElseThrow(() -> new EntityNotFoundException("asdfa"));
-
-				if (estudante.getMaterias().contains(materia)) {
-					estudante.getMaterias().remove(materia);
-					materia.getEstudantes().remove(estudante);
-					estRep.save(estudante);
+			for(Estudante estudant: estRep.findAll()) {
+				if(estudant.getMaterias().contains(materia)) {
+					estudant.getMaterias().remove(materia);
+					materia.getEstudantes().remove(estudant);
+					estRep.save(estudant);
 					repository.save(materia);
-					
 				}
+				
 			}
+			
 			repository.deleteById(materiaId);
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(materiaId);
